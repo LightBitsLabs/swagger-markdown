@@ -1,6 +1,8 @@
-const dataTypeTransformer = require('./dataTypes');
-const inArray = require('../lib/inArray');
-const Schema = require('../models/schema');
+'use strict';
+
+var dataTypeTransformer = require('./dataTypes');
+var inArray = require('../lib/inArray');
+var Schema = require('../models/schema');
 
 /**
  * If Property field is present parse them.
