@@ -15,8 +15,10 @@ const parseProperties = (name, definition) => {
   Object.keys(definition.properties).map(propName => {
     const prop = definition.properties[propName];
     const typeCell = dataTypeTransformer(new Schema(prop));
-    const descriptionCell = ('description' in prop ? prop.description : '').replace(/[\r\n]/g, ' ');
-    const requiredCell = inArray(propName, required) ? 'Yes' : 'No';
+    var descriptionCell = 'description' in prop ? prop.description : 'none';
+    // remove new lines so the table wont break
+    descriptionCell = descriptionCell.replace(/\n/g, "")
+    var requiredCell = inArray(propName, required) ? 'Yes' : 'No';
     res.push(`| ${propName} | ${typeCell} | ${descriptionCell} | ${requiredCell} |`);
   });
   return res;
@@ -29,9 +31,23 @@ const parseProperties = (name, definition) => {
  */
 const parsePrimitive = (name, definition) => {
   const res = [];
-  const typeCell = 'type' in definition ? definition.type : '';
-  const descriptionCell = ('description' in definition ? definition.description : '').replace(/[\r\n]/g, ' ');
-  const requiredCell = '';
+  const typeCell = 'type' in definition ? definition.type : 'none';
+  var descriptionCell = 'description' in definition ? definition.description : 'none';
+  // remove new lines so the table wont break
+  descriptionCell = descriptionCell.replace(/\n/g, " ")
+
+  // the title is shorter the the desc so we want to se it as a desc in the table for enums.
+  // enum is a special case cause it has a string type so we treat it as a primitive
+  // but it realy is a compound value documentation wise
+  var title = 'title' in definition ? definition.title : 'none';
+  // remove new lines so the table wont break
+  title = title.replace(/\n/g, " ")
+
+  if(name.indexOf("Enum") > -1) {
+	descriptionCell = title
+  }
+
+  var requiredCell = 'No';
   res.push(`| ${name} | ${typeCell} | ${descriptionCell} | ${requiredCell} |`);
   return res;
 };
