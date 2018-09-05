@@ -29,17 +29,20 @@ module.exports = (path, data, parameters) => {
     Object.keys(data).map(method => {
       if (inArray(method, ALLOWED_METHODS)) {
         // Set method as a subheader
-        res.push(`##### ***${method.toUpperCase()}***`);
+        res.push(`### ${method.toUpperCase()}`);
+        res.push('');
         const pathInfo = data[method];
 
         // Set summary
         if ('summary' in pathInfo) {
-          res.push(`**Summary:** ${pathInfo.summary}\n`);
+          res.push(`#### Summary\n`);
+          res.push(`${pathInfo.summary}\n`);
         }
 
         // Set description
         if ('description' in pathInfo) {
-          res.push(`**Description:** ${pathInfo.description}\n`);
+          res.push(`#### Description\n`);
+          res.push(`${pathInfo.description}\n`);
         }
 
         // Build parameters
