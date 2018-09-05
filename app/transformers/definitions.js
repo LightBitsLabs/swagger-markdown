@@ -45,7 +45,7 @@ const processDefinition = (name, definition) => {
   let res = [];
   let parsedDef = [];
   res.push('');
-  res.push(`### ${name}  `);
+  res.push(`### ${name}`);
   res.push('');
   if (definition.description) {
     res.push(definition.description);
@@ -77,7 +77,7 @@ module.exports = function (definitions) {
   });
   if (res.length > 0) {
     res.unshift('---');
-    res.unshift('### Models');
+    res.unshift('### Models\n');
     return res.join('\n');
   }
   return null;
