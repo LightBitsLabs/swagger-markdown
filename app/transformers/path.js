@@ -15,8 +15,10 @@ module.exports = (path, data, parameters) => {
 
   if (path && data) {
     // Make path as a header
-    res.push(`### ${path}`);
     res.push('---');
+    res.push('');
+    res.push(`## ${path}`);
+    res.push('');
 
     // Check if parameter for path are in the place
     if ('parameters' in data) {

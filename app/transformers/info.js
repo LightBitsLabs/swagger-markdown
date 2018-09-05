@@ -12,7 +12,8 @@ module.exports = info => {
   const res = [];
   if (info !== null && typeof info === 'object') {
     if ('title' in info) {
-      res.push(`${info.title}\n${Array(info.title.length + 1).join('=')}`);
+      res.push(`# ${info.title}\n`);
+      res.join('\n');
     }
 
     if ('description' in info) {
