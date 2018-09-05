@@ -67,12 +67,12 @@ module.exports.processDefinition = processDefinition;
  * @param {type} definitions
  * @return {type} Description
  */
-module.exports = definitions => {
-  const res = [];
-  Object.keys(definitions).map(definitionName => res.push(processDefinition(
-    definitionName,
-    definitions[definitionName]
-  )));
+module.exports = function (definitions) {
+  var res = [];
+  Object.keys(definitions).map(function (definitionName) {
+    const normailzedName = definitionName.replace("management", "")
+    return res.push(processDefinition(normailzedName, definitions[definitionName]));
+  });
   if (res.length > 0) {
     res.unshift('### Models\n');
     return res.join('\n');
