@@ -25,7 +25,8 @@ const resolver = {
  */
 const dataTypeResoler = schema => {
   if (schema.getReference()) {
-    const name = schema.getReference().match(/\/([^/]*)$/i)[1];
+    var name = schema.getReference().match(/\/([^/]*)$/i)[1];
+    name = name.replace("management", "");
     const link = anchor(name);
     return `[${name}](#${link})`;
   }

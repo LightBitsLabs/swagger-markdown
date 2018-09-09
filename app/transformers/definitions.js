@@ -1,6 +1,8 @@
-const dataTypeTransformer = require('./dataTypes');
-const inArray = require('../lib/inArray');
-const Schema = require('../models/schema');
+'use strict';
+
+var dataTypeTransformer = require('./dataTypes');
+var inArray = require('../lib/inArray');
+var Schema = require('../models/schema');
 
 /**
  * If Property field is present parse them.
@@ -13,8 +15,10 @@ const parseProperties = (name, definition) => {
   Object.keys(definition.properties).map(propName => {
     const prop = definition.properties[propName];
     const typeCell = dataTypeTransformer(new Schema(prop));
-    const descriptionCell = 'description' in prop ? prop.description : '';
-    const requiredCell = inArray(propName, required) ? 'Yes' : 'No';
+    var descriptionCell = 'description' in prop ? prop.description : 'none';
+    // remove new lines so the table wont break
+    descriptionCell = descriptionCell.replace(/\n/g, "")
+    var requiredCell = inArray(propName, required) ? 'Yes' : 'No';
     res.push(`| ${propName} | ${typeCell} | ${descriptionCell} | ${requiredCell} |`);
   });
   return res;
@@ -27,9 +31,23 @@ const parseProperties = (name, definition) => {
  */
 const parsePrimitive = (name, definition) => {
   const res = [];
-  const typeCell = 'type' in definition ? definition.type : '';
-  const descriptionCell = 'description' in definition ? definition.description : '';
-  const requiredCell = '';
+  const typeCell = 'type' in definition ? definition.type : 'none';
+  var descriptionCell = 'description' in definition ? definition.description : 'none';
+  // remove new lines so the table wont break
+  descriptionCell = descriptionCell.replace(/\n/g, " ")
+
+  // the title is shorter the the desc so we want to se it as a desc in the table for enums.
+  // enum is a special case cause it has a string type so we treat it as a primitive
+  // but it realy is a compound value documentation wise
+  var title = 'title' in definition ? definition.title : 'none';
+  // remove new lines so the table wont break
+  title = title.replace(/\n/g, " ")
+
+  if(name.indexOf("Enum") > -1) {
+	descriptionCell = title
+  }
+
+  var requiredCell = 'No';
   res.push(`| ${name} | ${typeCell} | ${descriptionCell} | ${requiredCell} |`);
   return res;
 };
@@ -43,7 +61,7 @@ const processDefinition = (name, definition) => {
   let res = [];
   let parsedDef = [];
   res.push('');
-  res.push(`### ${name}  `);
+  res.push(`### ${name}`);
   res.push('');
   if (definition.description) {
     res.push(definition.description);
@@ -67,15 +85,15 @@ module.exports.processDefinition = processDefinition;
  * @param {type} definitions
  * @return {type} Description
  */
-module.exports = definitions => {
-  const res = [];
-  Object.keys(definitions).map(definitionName => res.push(processDefinition(
-    definitionName,
-    definitions[definitionName]
-  )));
+module.exports = function (definitions) {
+  var res = [];
+  Object.keys(definitions).map(function (definitionName) {
+    const normailzedName = definitionName.replace("management", "")
+    return res.push(processDefinition(normailzedName, definitions[definitionName]));
+  });
   if (res.length > 0) {
     res.unshift('---');
-    res.unshift('### Models');
+    res.unshift('### Models\n');
     return res.join('\n');
   }
   return null;

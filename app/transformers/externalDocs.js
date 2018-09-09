@@ -7,5 +7,6 @@ module.exports = externalDocs => {
   } else if ('url' in externalDocs) {
     res.push(`[${DEFAULT_TEXT}](${externalDocs.url})`);
   }
+  res.push('')
   return res.length ? res.join('\n') : null;
 };
