@@ -5,6 +5,26 @@ var inArray = require('../lib/inArray');
 var Schema = require('../models/schema');
 
 /**
+ * If Enum field is present parse it.
+ * @param name of the definition
+ * @param definition definition object
+ */
+const parseEnum = (name, definition) => {
+  const required = 'required' in definition ? definition.required : [];
+  const res = [];
+  for(var i = 0; i < definition.enum.length; i++) {
+    var descriptionCell = 'none';
+    // remove new lines so the table wont break
+    descriptionCell = descriptionCell.replace(/\n/g, "")
+    var requiredCell = inArray(definition, required) ? 'Yes' : 'No';
+    res.push(`| ${definition.enum[i]} | ${definition.type} | ${descriptionCell} | ${requiredCell} |`);
+  }
+  return res;
+};
+
+
+
+/**
  * If Property field is present parse them.
  * @param name of the definition
  * @param definition definition object
@@ -72,6 +92,8 @@ const processDefinition = (name, definition) => {
 
   if ('properties' in definition) {
     parsedDef = parseProperties(name, definition);
+  } else if ('enum' in definition) {
+    parsedDef = parseEnum(name, definition);	 
   } else {
     parsedDef = parsePrimitive(name, definition);
   }
