@@ -114,8 +114,8 @@ module.exports = function (definitions) {
     return res.push(processDefinition(normailzedName, definitions[definitionName]));
   });
   if (res.length > 0) {
+    res.unshift('### Models - REST API Schema Definitions\n');
     res.unshift('---');
-    res.unshift('### Models\n');
     return res.join('\n');
   }
   return null;
