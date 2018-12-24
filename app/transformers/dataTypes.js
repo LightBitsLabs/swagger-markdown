@@ -18,6 +18,7 @@ const resolver = {
   }
 };
 
+const packageNamePrefix = "v1"
 /**
  * Transform data types into common names
  * @param {Schema} schema
@@ -32,7 +33,7 @@ const dataTypeResolver = schema => {
   }
   if (schema.getReference()) {
     var name = schema.getReference().match(/\/([^/]*)$/i)[1];
-    name = name.replace("management", "");
+    name = name.replace(packageNamePrefix, "");
     const link = anchor(name);
     return `[${name}](#${link})`;
   }
