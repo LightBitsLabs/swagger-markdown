@@ -103,6 +103,9 @@ const processDefinition = (name, definition) => {
 };
 module.exports.processDefinition = processDefinition;
 
+
+const packageNamePrefix = "v1"
+
 /**
  * @param {type} definitions
  * @return {type} Description
@@ -110,7 +113,7 @@ module.exports.processDefinition = processDefinition;
 module.exports = function (definitions) {
   var res = [];
   Object.keys(definitions).map(function (definitionName) {
-    const normailzedName = definitionName.replace("management", "")
+    const normailzedName = definitionName.replace(packageNamePrefix, "")
     return res.push(processDefinition(normailzedName, definitions[definitionName]));
   });
   if (res.length > 0) {
